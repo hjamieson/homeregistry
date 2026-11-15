@@ -10,12 +10,13 @@ type Nic struct {
 }
 
 type Device struct {
-	Id       string
-	Hostname string
-	NIC      []Nic     `json:",omitempty"`
-	Manuf    string    `json:",omitempty"`
-	OS       string    `json:",omitempty"`
-	Class    string    `json:",omitempty"`
-	Contact  string    `json:",omitempty"`
-	LastInfo time.Time `json:",omitzero"`
+	Id        string
+	Hostname  string
+	NIC       []Nic     `json:",omitempty"`
+	Manuf     string    `json:",omitempty"`
+	MachineID string    `json:",omitempty"`
+	OS        string    `json:",omitempty"`
+	Class     string    `json:",omitempty"`
+	Contact   string    `json:",omitempty"`
+	LastInfo  time.Time `json:",omitzero"`
 }
