@@ -2,21 +2,31 @@ package platform
 
 import (
 	"errors"
-	"log"
+	"fmt"
 	"os"
+	"regexp"
 	"strings"
 )
 
-var PLATFORM_ERR = errors.New("platform error")
-var MACHINEID = "/etc/machine-id"
+var ErrNoData = errors.New("not found")
+
+const notavailable = ""
+const idfile = "/etc/machine-id"
+
+var uuidPattern = regexp.MustCompile("^[0-9a-z]+$")
 
 func MachineID() (string, error) {
-	bytes, err := os.ReadFile(MACHINEID)
+	data, err := os.ReadFile(idfile)
 	if err != nil {
-		log.Printf("unable to open file: %v", err)
-		return "", PLATFORM_ERR
+		return notavailable, fmt.Errorf("not found: %w", err)
 	}
-	ID := strings.TrimSuffix(string(bytes), "\n")
+	id := strings.TrimSpace(string(data))
+	if len(id) != 32 {
+		return notavailable, ErrNoData
+	}
+	if !uuidPattern.MatchString(id) {
+		return notavailable, ErrNoData
+	}
 
-	return ID, nil
+	return id, nil
 }
