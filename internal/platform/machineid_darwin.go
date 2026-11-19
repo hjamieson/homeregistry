@@ -32,3 +32,7 @@ func MachineID() (string, error) {
 
 	return found[1], nil
 }
+
+func Manufacturer() (string, error){
+	return "Apple Inc.", nil
+}
