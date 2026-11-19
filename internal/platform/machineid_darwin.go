@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os/exec"
 	"regexp"
+	"runtime"
+	"strings"
 	"time"
 )
 
@@ -33,6 +35,28 @@ func MachineID() (string, error) {
 	return found[1], nil
 }
 
-func Manufacturer() (string, error){
+func Manufacturer() (string, error) {
 	return "Apple Inc.", nil
+}
+
+func Os() string {
+	ctx, cancel := context.WithTimeout(context.Background(), 2 * time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "sw_vers")
+	data, err := cmd.Output()
+	if err!= nil {
+		return runtime.GOOS
+	}
+	var buf []string
+	for line := range strings.Lines(string(data)){
+		if t := strings.Split(line, ":"); len(t) > 1 {
+			buf = append(buf, strings.TrimSpace(t[1]))
+		}
+	}
+	os := strings.Join(buf, ".")
+	if len(os) == 0 {
+		return runtime.GOOS
+	}
+
+	return os
 }
