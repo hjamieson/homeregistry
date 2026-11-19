@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"runtime"
 	"time"
 	"uuid"
 
@@ -13,19 +12,18 @@ import (
 )
 
 func main() {
-	fmt.Println("the enroller!")
 	hostname, _ := os.Hostname()
-	os := runtime.GOOS
+	os := platform.Os() //runtime.GOOS
 	machineID, _ := platform.MachineID()
-	manuf , _ := platform.Manufacturer()
+	manuf, _ := platform.Manufacturer()
 
 	device := model.Device{
-		Id : uuid.NewV7().String(),
-		OS: os,
-		Hostname: hostname,
+		Id:        uuid.NewV7().String(),
+		OS:        os,
+		Hostname:  hostname,
 		MachineID: machineID,
-		Manuf: manuf,
-		LastInfo: time.Now(),
+		Manuf:     manuf,
+		LastInfo:  time.Now(),
 	}
 	out, _ := json.Marshal(device)
 
