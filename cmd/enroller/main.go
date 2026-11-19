@@ -13,7 +13,7 @@ import (
 
 func main() {
 	hostname, _ := os.Hostname()
-	os := platform.Os() //runtime.GOOS
+	os := platform.Os() 
 	machineID, _ := platform.MachineID()
 	manuf, _ := platform.Manufacturer()
 
