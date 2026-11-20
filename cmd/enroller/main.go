@@ -16,12 +16,12 @@ func main() {
 	os := platform.Os()
 	machineID, _ := platform.MachineID()
 	manuf, _ := platform.Manufacturer()
-	nic, _ := platform.NetworkInterface()
+	nics, _ := platform.NetworkInterface()
 
 	device := model.Device{
 		Id:        uuid.NewV7().String(),
 		OS:        os,
-		NIC:       []model.Nic{nic},
+		NIC:       nics,
 		Hostname:  hostname,
 		MachineID: machineID,
 		Manuf:     manuf,
@@ -30,8 +30,4 @@ func main() {
 	out, _ := json.Marshal(device)
 
 	fmt.Println(string(out))
-
-	fmt.Println("----------------------------")
-	nics, _ := platform.NicData()
-	fmt.Printf("%v\n", nics)
 }

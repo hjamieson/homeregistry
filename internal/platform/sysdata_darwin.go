@@ -42,15 +42,15 @@ func Manufacturer() (string, error) {
 }
 
 func Os() string {
-	ctx, cancel := context.WithTimeout(context.Background(), 2 * time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, "sw_vers")
 	data, err := cmd.Output()
-	if err!= nil {
+	if err != nil {
 		return runtime.GOOS
 	}
 	var buf []string
-	for line := range strings.Lines(string(data)){
+	for line := range strings.Lines(string(data)) {
 		if t := strings.Split(line, ":"); len(t) > 1 {
 			buf = append(buf, strings.TrimSpace(t[1]))
 		}
@@ -63,36 +63,38 @@ func Os() string {
 	return os
 }
 
-func NetworkInterface() (model.Nic, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 2 * time.Second)
+func NetworkInterface() ([]model.Nic, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	cmd := exec.CommandContext(ctx, "ifconfig", "en0")
 	defer cancel()
 
-	result := model.Nic{}
+	var result []model.Nic
 	out, err := cmd.Output()
 	if err != nil {
 		return result, err
 	}
-	fmt.Println(string(out))
-	
+	// fmt.Println(string(out))
+
 	//% ifconfig en0
 	//	en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
-    //    options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
-    //    ether ba:7d:ed:b0:51:03
-    //    inet6 fe80::400:2c3e:bd0b:cdc2%en0 prefixlen 64 secured scopeid 0xf
-    //    inet 192.168.1.13 netmask 0xffffff00 broadcast 192.168.1.255
-    //    nd6 options=201<PERFORMNUD,DAD>
-    //    media: autoselect
-    //    status: active
+	//    options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+	//    ether ba:7d:ed:b0:51:03
+	//    inet6 fe80::400:2c3e:bd0b:cdc2%en0 prefixlen 64 secured scopeid 0xf
+	//    inet 192.168.1.13 netmask 0xffffff00 broadcast 192.168.1.255
+	//    nd6 options=201<PERFORMNUD,DAD>
+	//    media: autoselect
+	//    status: active
 	macPattern := regexp.MustCompile(`ether ([\w]{2}:[\w]{2}:[\w]{2}:[\w]{2}:[\w]{2}:[\w]{2})`)
 	addrPattern := regexp.MustCompile(`inet ([\d]+\.[\d]+\.[\d]+\.[\d]+)`)
 	macMatch := macPattern.FindStringSubmatch(string(out))
+	nic := model.Nic{}
 	if macMatch != nil {
-		result.MAC = macMatch[1]
+		nic.MAC = macMatch[1]
 	}
 	addrMatch := addrPattern.FindStringSubmatch(string(out))
 	if addrMatch != nil {
-		result.IP = addrMatch[1]
+		nic.IP = addrMatch[1]
 	}
+	result = append(result, nic)
 	return result, nil
 }
