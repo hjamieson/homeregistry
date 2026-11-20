@@ -23,15 +23,15 @@ func TestHostnameCtl(t *testing.T) {
 }
 
 func TestGetNic(t *testing.T) {
-	nic, err := NetworkInterface()
+	nics, err := NetworkInterface()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if nic.IP == "" {
+	if nics[0].IP == "" {
 		t.Errorf("IP is nil")
 	}
-	if nic.MAC == "" {
+	if nics[0].MAC == "" {
 		t.Error("MAC is nil")
 	}
-	t.Log(nic)
+	t.Log(nics[0])
 }
