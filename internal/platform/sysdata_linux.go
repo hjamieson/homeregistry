@@ -10,6 +10,8 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/hjamieson/homeregistry/internal/model"
 )
 
 var ErrNoData = errors.New("not found")
@@ -85,4 +87,8 @@ func Os() string {
 		return goos
 	}
 	return os
+}
+
+func NetworkInterface() (model.Nic, error) {
+	return model.Nic{}, errors.New("no impl")
 }

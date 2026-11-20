@@ -30,4 +30,8 @@ func main() {
 	out, _ := json.Marshal(device)
 
 	fmt.Println(string(out))
+
+	fmt.Println("----------------------------")
+	nics, _ := platform.NicData()
+	fmt.Printf("%v\n", nics)
 }

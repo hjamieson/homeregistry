@@ -21,3 +21,17 @@ func TestHostnameCtl(t *testing.T) {
 		t.Errorf("0 properties returned")
 	}
 }
+
+func TestGetNic(t *testing.T) {
+	nic, err := NetworkInterface()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if nic.IP == "" {
+		t.Errorf("IP is nil")
+	}
+	if nic.MAC == "" {
+		t.Error("MAC is nil")
+	}
+	t.Log(nic)
+}
