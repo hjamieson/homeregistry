@@ -1,6 +1,7 @@
 package platform
 
 import (
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -28,4 +29,29 @@ func TestManufacturer(t *testing.T) {
 	if !strings.Contains(manuf, "Apple") {
 		t.Errorf("got %q, want %q", manuf, "Apple")
 	}
+}
+
+func TestAppleInc(t *testing.T){
+		pat := regexp.MustCompile(`<([\w\s \.]+)>`)
+	sample := "here is <Apple Inc.> the end"
+
+	toks := pat.FindStringSubmatch(sample)
+	if toks[1] != "Apple Inc." {
+		t.Errorf("want %q, got %q", "Apple Inc.", toks)
+	}
+
+}
+
+func TestGetNic(t *testing.T){
+	nic, err := NetworkInterface()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if nic.IP == "" {
+		t.Errorf("IP is nil")
+	}
+	if nic.MAC == "" {
+		t.Error("MAC is nil")
+	}
+	t.Log(nic)
 }
